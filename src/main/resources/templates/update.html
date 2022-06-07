@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>update</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js">
+	
+</script>
+<script
+	src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js">
+	
+</script>
+
+<!-- Include Dexie -->
+<script src="https://unpkg.com/dexie@latest/dist/dexie.js"></script>
+
+
+<style>
+.update_form {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.buttons {
+	text-align: center;
+	margin-top: 15px;
+}
+</style>
+
+
+<script>
+	$.ajax({
+		url : "/",
+		success : function(data) {
+			var select = '';
+			$.each(data, function(key, value) {
+				select += '<option val=' + value.slno + ' id="opsn">'
+						+ value.slno + '</option>';
+				console.log(value.slno);
+			})
+			$('#id').html(select);
+		},
+
+		type : 'GET',
+	});
+	function EditInfo() {
+		$.ajax({
+			url : "/" + $("#id").val(),
+			type : 'GET',
+			success : function(data) {
+				console.log(data);
+				$('#id1').val(data.slno);
+				$('#date').val(data.date);
+				$('#client').val(data.client);
+				$('#role').val(data.role);
+				$('#candidate_name').val(data.candidate_name);
+				$('#primary_contact').val(data.primary_contact);
+				$('#email').val(data.email);
+				$('#total_experience').val(data.total_experience);
+				$('#cctc').val(data.cctc);
+				$('#ectc').val(data.ectc);
+				$('#official_NP').val(data.official_NP);
+				$('#current_location').val(data.current_location);
+				$('#status').val(data.status);
+				$('#vaccination_status').val(data.vaccination_status);
+				$('#recruiter').val(data.recruiter);
+			}
+		})
+	}
+</script>
+<script>
+	function save() {
+		var data = {}
+		data["id1"] = $("id1").val();
+		data["date"] = $("#date").val();
+		data["client"] = $("#client").val();
+		data["role"] = $("#role").val();
+		data["candidate_name"] = $("#candidate_name").val();
+		data["primary_contact"] = $("#primary_contact").val();
+		data["email"] = $("#email").val();
+		data["total_experience"] = $("#total_experience").val();
+		data["cctc"] = $("#cctc").val();
+		data["ectc"] = $("#cctc").val();
+		data["official_NP"] = $("#official_NP").val();
+		data["current_location"] = $("#current_location").val();
+		data["status"] = $("#status").val();
+		data["vaccination_status"] = $("#vaccination_status").val();
+		data["recruiter"] = $("#recruiter").val();
+
+		$.ajax({
+			url : "/" + $("#id").val(),
+			contentType : "application/json",
+			data : JSON.stringify(data),
+			type : "PUT",
+			success : function(data) {
+
+				window.location.href = '/display';
+				alert("Inserted Successfully" + data);
+
+			},
+			error : function(e) {
+				alert('error', e);
+			}
+		});
+	}
+
+	function doconfirm() {
+		var c = confirm("are you sure to delete the record?");
+		if (c == true) {
+			$.ajax({
+				type : 'DELETE',
+				url : "/" + $("#id").val(),
+				contentType : "application/json",
+				success : function(response, status) {
+					window.location.href = "/display";
+					alert("successfully Deleted")
+					console.log(status);
+				}
+			})
+		}
+	}
+</script>
+
+</head>
+
+<body>
+
+	<label class="form-label">Enter SlNo</label>
+	<select id="id" class="form-group">
+
+	</select>
+	<button type="button" onclick="EditInfo();"
+		class="btn btn-warning">Show</button>
+	<div class="update_form">
+		<div class="form-group col-md-6">
+			slno: <input type="text" id="id1" class="form-control" disabled>
+			date: <input type="date" id="date" class="form-control">
+			client: <input type="text" id="client" class="form-control">
+			role: <input type="text" id="role" class="form-control">
+			candidate name: <input type="text" id="candidate_name"
+				class="form-control"> Contact: <input type="tel"
+				id="primary_contact" class="form-control"> Email: <input
+				type="text" id="email" class="form-control"> total
+			experiance: <input type="text" id="total_experience"
+				class="form-control"> cctc: <input type="text" id="cctc"
+				class="form-control"> ectc: <input type="text" id="ectc"
+				class="form-control"> notice period: <input type="text"
+				id="official_NP" class="form-control"> location: <input
+				type="text" id="current_location" class="form-control">
+			status: <input type="text" id="status" class="form-control">
+			vaccination status: <input type="text" id="vaccination_status"
+				class="form-control"> recruiter: <input type="text"
+				id="recruiter" class="form-control">
+			<div class="buttons">
+				<button onclick="save();" class="btn btn-warning">Update</button>
+				<button onclick="doconfirm()" class="btn btn-danger">Delete</button>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>
